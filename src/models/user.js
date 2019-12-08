@@ -59,6 +59,12 @@ userSchema.virtual("tasks", {
   foreignField: "owner"
 });
 
+userSchema.virtual("company", {
+  ref: "Company",
+  localField: "_id",
+  foreignField: "owner"
+});
+
 //generate token
 userSchema.methods.generateAuthToken = async function() {
   const user = this;

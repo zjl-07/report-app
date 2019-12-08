@@ -7,8 +7,14 @@ const companySchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true
+    },
+    owner: {
+      type: mongoose.Schema.Types.ObjectId, //menambahkan object id untuk siapa yang berhak
+      required: true,
+      ref: "User" //reference untuk membuat relationship
     }
   },
+
   {
     timestamps: true
   }

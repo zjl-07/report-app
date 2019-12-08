@@ -39,7 +39,7 @@ const projectSchema = new mongoose.Schema(
 
 projectSchema.virtual("vuln", {
   ref: "Vuln",
-  localfield: "_id",
+  localField: "_id",
   foreignField: "owner"
 });
 
