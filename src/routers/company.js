@@ -97,6 +97,7 @@ router.patch("/company/:id", auth, async (req, res) => {
   }
 });
 
+//Delete Company by ID
 router.delete("/company/:id", auth, async (req, res) => {
   try {
     const company = await Company.findOneAndDelete({
