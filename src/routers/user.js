@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const router = new express.Router();
 const auth = require("../middleware/auth");
+const authAdmin = require("../middleware/authAdmin");
 const multer = require("multer");
 const sharp = require("sharp");
 
@@ -41,7 +42,7 @@ router.post("/users/login", async (req, res) => {
 // });
 
 //get data just me
-router.get("/users/me", auth, async (req, res) => {
+router.get("/users/me", authAdmin, async (req, res) => {
   res.send(req.user);
 });
 
