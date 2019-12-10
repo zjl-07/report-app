@@ -20,7 +20,7 @@ router.post("/company/:id/projects", auth, async (req, res) => {
 });
 
 //Read Project By Id (menggunakan company Id)
-router.get("/company/:id/projects", auth, async (req, res) => {
+router.get("/company/:id/projects/", auth, async (req, res) => {
   const _id = req.params.id;
   const match = {};
   const sort = {};
@@ -33,23 +33,6 @@ router.get("/company/:id/projects", auth, async (req, res) => {
     const parts = req.query.sortBy.split(":");
     sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
   }
-  // try {
-  //   const project = await req.user
-  //     .populate({
-  //       path: "company",
-  //       match,
-  //       populate: {
-  //         path: "projects",
-  //         model: "Project",
-  //         match
-  //       }
-  //     })
-  //     .execPopulate();
-  //   console.log(project);
-  //   res.json(req.user.company);
-  // } catch (e) {
-  //   res.status(500).send(e);
-  // }
   try {
     const project = await Project.find({ owner: _id })
       .limit(parseInt(req.query.limit))

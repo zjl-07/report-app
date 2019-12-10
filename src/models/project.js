@@ -28,6 +28,12 @@ const projectSchema = new mongoose.Schema(
     target: {
       type: Buffer
     },
+    assigned: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+      }
+    ],
     owner: {
       type: mongoose.Schema.Types.ObjectId, //menambahkan object id untuk siapa yang berhak
       required: true,

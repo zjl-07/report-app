@@ -12,7 +12,6 @@ const authAdmin = async (req, res, next) => {
     }
     req.token = token;
     req.user = user;
-    console.log(req.user);
     if (req.user.role !== "admin") {
       res.status(401).send();
       return;
