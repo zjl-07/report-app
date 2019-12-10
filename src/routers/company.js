@@ -73,7 +73,15 @@ router.get("/company/:id", auth, async (req, res) => {
 //update company
 router.patch("/company/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["name"];
+  const allowedUpdates = [
+    "name",
+    "email",
+    "address",
+    "logo",
+    "description",
+    "pic",
+    "phone"
+  ];
   const isValidOperation = updates.every(update =>
     allowedUpdates.includes(update)
   );
