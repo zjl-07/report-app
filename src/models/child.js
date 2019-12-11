@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const Desc = require("./description");
 
-const vulnSchema = new mongoose.Schema(
+const childSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -23,7 +22,7 @@ const vulnSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
-    child: {
+    version: {
       type: Number
     },
     poc: {
@@ -35,18 +34,12 @@ const vulnSchema = new mongoose.Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       require: true,
-      ref: "Project"
+      ref: "Vuln"
     }
   },
   { timestamps: true }
 );
 
-vulnSchema.virtual("desc", {
-  ref: "Desc",
-  localField: "_id",
-  foreignField: "owner"
-});
+const Child = mongoose.model("Child", childSchema);
 
-const Vuln = mongoose.model("Vuln", vulnSchema);
-
-module.exports = Vuln;
+module.exports = Child;

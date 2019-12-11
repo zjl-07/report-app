@@ -79,6 +79,7 @@ router.patch("/projects/:id", auth, async (req, res) => {
     "end_pentest",
     "start_report",
     "end_report",
+    "assigned",
     "target"
   ];
   const isValidOperation = updates.every(update =>
