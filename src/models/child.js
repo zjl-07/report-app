@@ -22,9 +22,6 @@ const childSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
-    version: {
-      type: Number
-    },
     poc: {
       type: Buffer
     },

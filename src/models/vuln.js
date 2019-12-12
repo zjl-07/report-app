@@ -24,7 +24,8 @@ const vulnSchema = new mongoose.Schema(
       default: false
     },
     child: {
-      type: Number
+      type: Boolean,
+      default: false
     },
     poc: {
       type: Buffer
