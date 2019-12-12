@@ -2,18 +2,101 @@ const express = require("express");
 const Child = require("../models/child");
 const router = new express.Router();
 const auth = require("../middleware/auth");
+const multer = require("multer");
+const sharp = require("sharp");
 
-router.post("/vulns/:id/childs", auth, async (req, res) => {
-  const _id = req.params.id;
-  const child = new Child({
-    ...req.body,
-    owner: _id
-  });
+const upload = multer({
+  limits: {
+    fileSize: 1000000 //1MB
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg)$/)) {
+      return cb(new Error("Please upload an image"));
+    }
+
+    cb(undefined, true);
+  }
+});
+
+router.post(
+  "/vulns/:id/childs",
+  auth,
+  upload.single("poc"),
+  async (req, res) => {
+    const buffer = await sharp(req.file.buffer)
+      .png()
+      .toBuffer();
+    const _id = req.params.id;
+
+    const child = new Child({
+      ...req.body,
+      owner: _id,
+      poc: buffer
+    });
+
+    try {
+      await child.save();
+      res.status(201).send(child);
+    } catch (e) {
+      res.status(500).send(e);
+    }
+  }
+);
+
+router.post(
+  "/vulns/:id/childs_pocverif",
+  auth,
+  upload.single("pocverif"),
+  async (req, res) => {
+    const buffer = await sharp(req.file.buffer)
+      .png()
+      .toBuffer();
+    const _id = req.params.id;
+
+    const child = new Child({
+      ...req.body,
+      owner: _id,
+      pocverif: buffer
+    });
+
+    try {
+      await child.save();
+      res.status(201).send(child);
+    } catch (e) {
+      res.status(500).send(e);
+    }
+  }
+);
+
+//read picture in poc
+router.get("/vulns/:id/poc", async (req, res) => {
   try {
-    await child.save();
-    res.status(201).send(child);
+    const child = await Child.findById(req.params.id);
+
+    if (!child || !child.poc) {
+      throw new Error("Child cant be found");
+    }
+
+    res.set("Content-Type", "image/png");
+    res.send(child.poc);
   } catch (e) {
-    res.status(500).send();
+    res.status(404).send(e);
+  }
+});
+
+//read picture in poc
+router.get("/vulns/:id/pocverif", async (req, res) => {
+  try {
+    const child = await Child.findById(req.params.id);
+
+    if (!child || !child.pocverif) {
+      throw new Error("Child cant be found");
+    }
+
+    res.set("Content-Type", "image/png");
+    res.send(child.pocverif);
+  } catch (e) {
+    res.status(404).send(e);
   }
 });
 

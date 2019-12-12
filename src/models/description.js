@@ -8,7 +8,7 @@ const descriptionSchema = new mongoose.Schema({
   desc: {
     type: String
   },
-  CWE: {
+  cwe: {
     type: String
   },
   owner: {

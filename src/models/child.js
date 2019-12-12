@@ -37,6 +37,16 @@ const childSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+childSchema.methods.toJSON = function() {
+  const child = this;
+  const childObject = child.toObject();
+
+  delete childObject.poc;
+  delete childObject.pocverif;
+
+  return childObject;
+};
+
 const Child = mongoose.model("Child", childSchema);
 
 module.exports = Child;
