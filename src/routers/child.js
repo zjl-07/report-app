@@ -18,6 +18,7 @@ const upload = multer({
   }
 });
 
+//create childs by vuln ID
 router.post(
   "/vulns/:id/childs",
   auth,
@@ -43,6 +44,8 @@ router.post(
   }
 );
 
+//upload popcverif image
+//*
 router.post(
   "/vulns/:id/childs_pocverif",
   auth,
@@ -69,7 +72,7 @@ router.post(
 );
 
 //read picture in poc
-router.get("/vulns/:id/poc", async (req, res) => {
+router.get("/childs_poc/:id", async (req, res) => {
   try {
     const child = await Child.findById(req.params.id);
 
@@ -84,8 +87,8 @@ router.get("/vulns/:id/poc", async (req, res) => {
   }
 });
 
-//read picture in poc
-router.get("/vulns/:id/pocverif", async (req, res) => {
+//read picture in pocverif
+router.get("/childs_pocverif/:id", async (req, res) => {
   try {
     const child = await Child.findById(req.params.id);
 
@@ -129,8 +132,14 @@ router.get("/vulns/:id/childs", auth, async (req, res) => {
 });
 
 //update childs
-router.patch("/childs/:id", auth, async (req, res) => {
+router.patch("/childs/:id", auth, upload.single("poc"), async (req, res) => {
+  const buffer = await sharp(req.file.buffer)
+    .png()
+    .toBuffer();
+
+  req.body.poc = buffer;
   const updates = Object.keys(req.body);
+
   const allowedUpdates = [
     "name",
     "location",
