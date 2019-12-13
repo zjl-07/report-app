@@ -32,6 +32,10 @@ const childSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       require: true,
       ref: "Vuln"
+    },
+    desc: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "description"
     }
   },
   { timestamps: true }

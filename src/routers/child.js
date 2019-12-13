@@ -148,6 +148,7 @@ router.patch("/childs/:id", auth, upload.single("poc"), async (req, res) => {
     "poc",
     "pocverif"
   ];
+
   const isValidOperation = updates.every(update =>
     allowedUpdates.includes(update)
   );

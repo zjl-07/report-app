@@ -10,11 +10,6 @@ const descriptionSchema = new mongoose.Schema({
   },
   cwe: {
     type: String
-  },
-  owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "Vuln"
   }
 });
 

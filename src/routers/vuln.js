@@ -7,7 +7,7 @@ router.post("/projects/:id/vulns", auth, async (req, res) => {
   const _id = req.params.id;
   const vuln = new Vuln({
     ...req.body,
-    owner: _id
+    project_id: _id
   });
   try {
     await vuln.save();
@@ -32,7 +32,7 @@ router.get("/projects/:id/vulns", auth, async (req, res) => {
     sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
   }
   try {
-    const vuln = await Vuln.find({ owner: _id })
+    const vuln = await Vuln.find({ project_id: _id })
       .limit(parseInt(req.query.limit))
       .skip(parseInt(req.query.skip))
       .sort(sort);
@@ -67,8 +67,10 @@ router.patch("/vulns/:id", auth, async (req, res) => {
     "status",
     "isvuln",
     "poc",
+    "description",
     "pocverif"
   ];
+
   const isValidOperation = updates.every(update =>
     allowedUpdates.includes(update)
   );

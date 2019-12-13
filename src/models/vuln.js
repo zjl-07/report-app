@@ -19,6 +19,9 @@ const vulnSchema = new mongoose.Schema(
       default: false
       //status active atau inactive
     },
+    description: {
+      type: String
+    },
     isvuln: {
       type: Boolean,
       default: false
@@ -33,7 +36,7 @@ const vulnSchema = new mongoose.Schema(
     pocverif: {
       type: Buffer
     },
-    owner: {
+    project_id: {
       type: mongoose.Schema.Types.ObjectId,
       require: true,
       ref: "Project"
