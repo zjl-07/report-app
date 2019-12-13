@@ -4,6 +4,7 @@ const router = new express.Router();
 const auth = require("../middleware/auth");
 const multer = require("multer");
 const sharp = require("sharp");
+const Description = require("../models/description");
 
 const upload = multer({
   limits: {
@@ -119,12 +120,22 @@ router.get("/vulns/:id/childs", auth, async (req, res) => {
     sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
   }
   try {
-    const child = await Child.find({ owner: _id })
+    var child = await Child.find({ owner: _id })
       .limit(parseInt(req.query.limit))
       .skip(parseInt(req.query.skip))
       .sort(sort);
     if (!child) {
       return res.status(400).send();
+    }
+
+    for (var p of child) {
+      var arr_desc = []; //bikin array untuk nampung, baru di push ke var assign yang asli
+      for (var a of p.desc) {
+        console.log(desc);
+        var desc = await Description.findOne({ _id: a });
+        arr_desc.push(desc);
+      }
+      p.desc = arr_desc; //lsg ganti pake key yang harus dibuat baru
     }
     res.send(child);
   } catch (e) {
