@@ -17,20 +17,20 @@ const companySchema = new mongoose.Schema(
     address: {
       typs: String
     },
-    logo: {
+    imageLink: {
       type: Buffer
     },
     description: {
       type: String
     },
-    pic: {
+    personInCharge: {
       type: String
     },
-    phone: {
+    phoneNumber: {
       type: Number,
       default: 0
     },
-    owner: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId, //menambahkan object id untuk siapa yang berhak
       required: true,
       ref: "User" //reference untuk membuat relationship

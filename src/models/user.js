@@ -66,7 +66,7 @@ userSchema.virtual("tasks", {
 userSchema.virtual("company", {
   ref: "Company",
   localField: "_id",
-  foreignField: "owner"
+  foreignField: "userId"
 });
 
 //generate token

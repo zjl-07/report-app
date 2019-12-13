@@ -8,7 +8,7 @@ router.post("/company", auth, (req, res) => {
   // const task = new Task(req.body);
   const company = new Company({
     ...req.body,
-    owner: req.user._id
+    userId: req.user._id
   });
   try {
     company.save();
@@ -59,7 +59,7 @@ router.get("/company/:id", auth, async (req, res) => {
   try {
     const company = await Company.findOne({
       _id,
-      owner: req.user._id
+      userId: req.user._id
     });
     if (!company) {
       return res.status(400).send();
@@ -91,7 +91,7 @@ router.patch("/company/:id", auth, async (req, res) => {
   try {
     const company = await Company.findOne({
       _id: req.params.id,
-      owner: req.user._id
+      userId: req.user._id
     });
 
     if (!company) {
@@ -110,7 +110,7 @@ router.delete("/company/:id", auth, async (req, res) => {
   try {
     const company = await Company.findOneAndDelete({
       _id: req.params.id,
-      owner: req.user._id
+      userId: req.user._id
     });
     if (!company) {
       res.status(404).send();

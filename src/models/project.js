@@ -13,28 +13,28 @@ const projectSchema = new mongoose.Schema(
       required: true,
       trim: true
     },
-    start_pentest: {
+    startDate: {
       type: Date
     },
-    end_pentest: {
+    endDate: {
       type: Date
     },
-    start_report: {
+    reportStartDate: {
       type: Date
     },
-    end_pentest: {
+    reportEndDate: {
       type: Date
     },
     target: {
       type: Buffer
     },
-    assigned: [
+    team: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
       }
     ],
-    owner: {
+    corporateId: {
       type: mongoose.Schema.Types.ObjectId, //menambahkan object id untuk siapa yang berhak
       required: true,
       ref: "Company" //reference untuk membuat relationship

@@ -10,7 +10,7 @@ router.post("/company/:id/projects", auth, async (req, res) => {
   const _id = req.params.id;
   const project = new Project({
     ...req.body,
-    owner: _id //company
+    corporateId: _id //company
   });
   try {
     await project.save();
@@ -34,7 +34,7 @@ router.get("/company/:id/projects/", auth, async (req, res) => {
     sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
   }
   try {
-    var project = await Project.find({ owner: _id })
+    var project = await Project.find({ corporateId: _id })
       .limit(parseInt(req.query.limit))
       .skip(parseInt(req.query.skip))
       .sort(sort);
