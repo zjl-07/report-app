@@ -10,12 +10,11 @@ const companySchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      unique: true,
       trim: true,
       lowercase: true
     },
     address: {
-      typs: String
+      type: String
     },
     imageLink: {
       type: Buffer

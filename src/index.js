@@ -6,6 +6,7 @@ const projectRouter = require("./routers/project");
 const companyRouter = require("./routers/company");
 const vulnRouter = require("./routers/vuln");
 const childRouter = require("./routers/child");
+const descRouter = require("./routers/desc");
 const morgan = require("morgan");
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(projectRouter);
 app.use(companyRouter);
 app.use(vulnRouter);
 app.use(childRouter);
+app.use(descRouter);
 
 app.listen(port, () => {
   console.log("Server is up on port", +port);

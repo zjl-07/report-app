@@ -77,10 +77,10 @@ router.patch("/company/:id", auth, async (req, res) => {
     "name",
     "email",
     "address",
-    "logo",
+    "imageLink",
     "description",
-    "pic",
-    "phone"
+    "personInCharge",
+    "phoneNumber"
   ];
   const isValidOperation = updates.every(update =>
     allowedUpdates.includes(update)

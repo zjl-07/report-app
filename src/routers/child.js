@@ -27,6 +27,7 @@ router.post(
     const buffer = await sharp(req.file.buffer)
       .png()
       .toBuffer();
+
     const _id = req.params.id;
 
     const child = new Child({
@@ -44,7 +45,7 @@ router.post(
   }
 );
 
-//upload popcverif image
+//upload popcverif image and update pocverif
 //*
 router.post(
   "/vulns/:id/childs_pocverif",
