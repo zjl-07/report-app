@@ -42,13 +42,13 @@ router.get("/company/:id/projects/", auth, async (req, res) => {
       return res.status(400).send();
     }
     for (var p of project) {
-      var arr_assigned = []; //bikin array untuk nampung, baru di push ke var assign yang asli
-      for (var a of p.assigned) {
-        var assigned = await User.findOne({ _id: a });
-        console.log(assigned);
-        arr_assigned.push(assigned);
+      var arr_team = []; //bikin array untuk nampung, baru di push ke var assign yang asli
+      for (var a of p.team) {
+        var team = await User.findOne({ _id: a });
+        console.log(team);
+        arr_team.push(team);
       }
-      p.assigned = arr_assigned; //lsg ganti pake key yang harus dibuat baru
+      p.team = arr_team; //lsg ganti pake key yang harus dibuat baru
     }
     res.send(project);
   } catch (e) {
@@ -75,11 +75,11 @@ router.patch("/projects/:id", auth, async (req, res) => {
   const allowedUpdates = [
     "name",
     "description",
-    "start_pentest",
-    "end_pentest",
-    "start_report",
-    "end_report",
-    "assigned",
+    "startDate",
+    "endDate",
+    "reportStartDate",
+    "reportEndDate",
+    "team",
     "target"
   ];
   const isValidOperation = updates.every(update =>
