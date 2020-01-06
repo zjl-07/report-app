@@ -8,9 +8,12 @@ const vulnRouter = require("./routers/vuln");
 const childRouter = require("./routers/child");
 const descRouter = require("./routers/desc");
 const morgan = require("morgan");
+const cors = require("cors");
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cors({ credentials: true, origin: true }));
 
 app.use(morgan("tiny"));
 app.use(express.json());
