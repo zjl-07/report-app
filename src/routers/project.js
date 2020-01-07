@@ -70,25 +70,25 @@ router.get("/projects", auth, async (req, res) => {
 });
 
 //Update Projects
-router.patch("/projects/:id", auth, async (req, res) => {
+router.put("/projects/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = [
-    "name",
-    "description",
-    "startDate",
-    "endDate",
-    "reportStartDate",
-    "reportEndDate",
-    "team",
-    "target"
-  ];
-  const isValidOperation = updates.every(update =>
-    allowedUpdates.includes(update)
-  );
+  // const allowedUpdates = [
+  //   "name",
+  //   "description",
+  //   "startDate",
+  //   "endDate",
+  //   "reportStartDate",
+  //   "reportEndDate",
+  //   "team",
+  //   "target"
+  // ];
+  // const isValidOperation = updates.every(update =>
+  //   allowedUpdates.includes(update)
+  // );
 
-  if (!isValidOperation) {
-    return res.status(400).send({ error: "Invalid Updates!" });
-  }
+  // if (!isValidOperation) {
+  //   return res.status(400).send({ error: "Invalid Updates!" });
+  // }
   try {
     const project = await Project.findOne({
       _id: req.params.id
@@ -113,6 +113,19 @@ router.delete("/projects/:id", auth, async (req, res) => {
     });
     if (!project) {
       res.status(400).send();
+    }
+    res.send(project);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+router.get("/projects/:id", auth, async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const project = await Project.findOne({ _id });
+    if (!project) {
+      return res.status(400).send();
     }
     res.send(project);
   } catch (e) {

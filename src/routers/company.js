@@ -71,23 +71,25 @@ router.get("/company/:id", auth, async (req, res) => {
 });
 
 //update company
-router.patch("/company/:id", auth, async (req, res) => {
+router.put("/company/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = [
-    "name",
-    "email",
-    "address",
-    "imageLink",
-    "description",
-    "personInCharge",
-    "phoneNumber"
-  ];
-  const isValidOperation = updates.every(update =>
-    allowedUpdates.includes(update)
-  );
-  if (!isValidOperation) {
-    return res.status(400).send({ error: "Invalid Operation" });
-  }
+  // const allowedUpdates = [
+  //   "_id",
+  //   "userId",
+  //   "name",
+  //   "email",
+  //   "address",
+  //   "imageLink",
+  //   "description",
+  //   "personInCharge",
+  //   "phoneNumber"
+  // ];
+  // const isValidOperation = updates.every(update =>
+  //   allowedUpdates.includes(update)
+  // );
+  // if (!isValidOperation) {
+  //   return res.status(400).send({ error: "Invalid Operation" });
+  // }
   try {
     const company = await Company.findOne({
       _id: req.params.id,
