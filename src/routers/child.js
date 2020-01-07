@@ -49,7 +49,7 @@ router.post(
 //upload popcverif image and update pocverif
 //*
 router.post(
-  "/vulns/:id/childs_pocverif",
+  "/vulns/:id/childspocverif",
   auth,
   upload.single("pocverif"),
   async (req, res) => {
@@ -129,14 +129,11 @@ router.get("/vulns/:id/childs", auth, async (req, res) => {
     }
 
     for (var p of child) {
-      var arr_desc = []; //bikin array untuk nampung, baru di push ke var assign yang asli
-      for (var a of p.desc) {
-        console.log(desc);
-        var desc = await Description.findOne({ _id: a });
-        arr_desc.push(desc);
-      }
-      p.desc = arr_desc; //lsg ganti pake key yang harus dibuat baru
+      var arr_desc = null;
+      var desc = await Description.findOne({ _id: p.desc });
+      p.desc = desc;
     }
+
     res.send(child);
   } catch (e) {
     res.status(500).send(e);
@@ -158,6 +155,7 @@ router.patch("/childs/:id", auth, upload.single("poc"), async (req, res) => {
     "status",
     "isvuln",
     "poc",
+    "desc",
     "pocverif"
   ];
 

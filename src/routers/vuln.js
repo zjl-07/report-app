@@ -2,18 +2,109 @@ const express = require("express");
 const Vuln = require("../models/vuln");
 const router = new express.Router();
 const auth = require("../middleware/auth");
+const multer = require("multer");
+const sharp = require("sharp");
+const Description = require("../models/description");
 
-router.post("/projects/:id/vulns", auth, async (req, res) => {
-  const _id = req.params.id;
-  const vuln = new Vuln({
-    ...req.body,
-    project_id: _id
-  });
+const upload = multer({
+  limits: {
+    fileSize: 1000000 //1MB
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg)$/)) {
+      return cb(new Error("Please upload an image"));
+    }
+
+    cb(undefined, true);
+  }
+});
+
+//create vuln by project id
+router.post(
+  "/projects/:id/vulns",
+  auth,
+  upload.single("poc"),
+  async (req, res) => {
+    var buffer = null;
+    const _id = req.params.id;
+
+    try {
+      buffer = await sharp(req.file.buffer)
+        .png()
+        .toBuffer();
+    } catch (e) {}
+
+    console.log("a", buffer);
+
+    const vuln = new Vuln({
+      ...req.body,
+      projectId: _id,
+      userId: req.user._id,
+      poc: buffer
+    });
+
+    try {
+      await vuln.save();
+      res.status(201).send(vuln);
+    } catch (e) {
+      res.status(500).send();
+    }
+  }
+);
+
+//upload pocverif image and update pocverif
+router.post("/peojects/:id/vulnspocverif"),
+  auth,
+  upload.single("pocverif"),
+  async (req, res) => {
+    const buffer = await sharp(req.filter.buffer)
+      .png()
+      .toBuffer();
+    const _id = req.params.id;
+
+    const child = new child({
+      ...req.body,
+      owner: _id,
+      pocverif: buffer
+    });
+
+    try {
+      await child.save();
+      res.status(201).send(child);
+    } catch (e) {
+      res.status(500).send(e);
+    }
+  };
+
+//read picture in poc
+router.get("/vulns_poc/:id", async (req, res) => {
   try {
-    await vuln.save();
-    res.status(201).send(vuln);
+    const vuln = await Vuln.findById(req.params.id);
+
+    if (!vuln || !vuln.poc) {
+      throw new Error("Vuln cant be found");
+    }
+
+    res.set("Content-Type", "image/png");
+    res.send(vuln.poc);
   } catch (e) {
-    res.status(500).send();
+    res.status(404).send(e);
+  }
+});
+
+//read picture in pocverif
+router.get("/vulns_pocverif/:id", async (req, res) => {
+  try {
+    const vuln = await Vuln.findById(rqe.params.id);
+
+    if (!vuln || !vuln.pocverif) {
+      throw new Error("Vuln cant be found");
+    }
+
+    res.set("Content-Type", "image/png");
+    res.send(vuln.pocverif);
+  } catch (e) {
+    res.status(404).send(e);
   }
 });
 
@@ -32,13 +123,19 @@ router.get("/projects/:id/vulns", auth, async (req, res) => {
     sort[parts[0]] = parts[1] === "desc" ? -1 : 1;
   }
   try {
-    const vuln = await Vuln.find({ project_id: _id })
+    const vuln = await Vuln.find({ projectId: _id })
       .limit(parseInt(req.query.limit))
       .skip(parseInt(req.query.skip))
       .sort(sort);
     if (!vuln) {
       return res.status(400).send();
     }
+
+    for (var p of vuln) {
+      var desc = await Description.findOne({ _id: p.desc });
+      p.desc = desc;
+    }
+
     res.send(vuln);
   } catch (e) {
     res.status(500).send(e);
@@ -68,7 +165,8 @@ router.patch("/vulns/:id", auth, async (req, res) => {
     "isvuln",
     "poc",
     "description",
-    "pocverif"
+    "pocverif",
+    "desc"
   ];
 
   const isValidOperation = updates.every(update =>
@@ -86,6 +184,13 @@ router.patch("/vulns/:id", auth, async (req, res) => {
 
     if (!vuln) {
       return res.status(400).send();
+    }
+
+    if (req.user.id != vuln.userId) {
+      res.status(400).send({ error: "You need to create one " });
+
+      // res.redirect(`../vulns/${vuln._id}/child`).send(vuln);
+      return;
     }
 
     updates.forEach(update => (vuln[update] = req.body[update]));

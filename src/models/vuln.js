@@ -7,10 +7,6 @@ const vulnSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    id: {
-      //untuk nyimpen id di description
-      type: mongoose.Schema.Types.ObjectId
-    },
     location: {
       type: String
     },
@@ -36,20 +32,32 @@ const vulnSchema = new mongoose.Schema(
     pocverif: {
       type: Buffer
     },
-    project_id: {
+    projectId: {
       type: mongoose.Schema.Types.ObjectId,
       require: true,
       ref: "Project"
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    },
+    desc: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Description"
     }
   },
   { timestamps: true }
 );
 
-vulnSchema.virtual("desc", {
-  ref: "Desc",
-  localField: "_id",
-  foreignField: "owner"
-});
+vulnSchema.methods.toJSON = function() {
+  const vuln = this;
+  const vulnObject = vuln.toObject();
+
+  delete vulnObject.poc;
+  delete vulnObject.pocverif;
+
+  return vulnObject;
+};
 
 const Vuln = mongoose.model("Vuln", vulnSchema);
 

@@ -4,9 +4,7 @@ const Task = require("./project");
 const companySchema = new mongoose.Schema(
   {
     name: {
-      type: String,
-      required: true,
-      trim: true
+      type: String
     },
     email: {
       type: String,
@@ -46,6 +44,15 @@ companySchema.virtual("projects", {
   localField: "_id",
   foreignField: "owner"
 });
+
+companySchema.methods.toJSON = function() {
+  const company = this;
+  const companyObject = company.toObject();
+
+  delete companyObject.imageLink;
+
+  return companyObject;
+};
 
 const Company = mongoose.model("Company", companySchema);
 

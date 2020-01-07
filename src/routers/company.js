@@ -2,14 +2,39 @@ const express = require("express");
 const Company = require("../models/company");
 const router = new express.Router();
 const auth = require("../middleware/auth");
+const multer = require("multer");
+const sharp = require("sharp");
+
+const upload = multer({
+  limits: {
+    fileSize: 1000000 //1MB
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg)$/)) {
+      return cb(new Error("Please upload an image"));
+    }
+
+    cb(undefined, true);
+  }
+});
 
 //Create Company
-router.post("/company", auth, (req, res) => {
+router.post("/company/", auth, upload.single("imageLink"), async (req, res) => {
   // const task = new Task(req.body);
+  var buffer = null;
+
+  try {
+    buffer = await sharp(req.file.buffer)
+      .png()
+      .toBuffer();
+  } catch (e) {}
+
   const company = new Company({
     ...req.body,
-    userId: req.user._id
+    userId: req.user._id,
+    imageLink: buffer
   });
+
   try {
     company.save();
     res.status(201).send(company);
@@ -20,7 +45,7 @@ router.post("/company", auth, (req, res) => {
 });
 
 //Read Company
-router.get("/company", auth, async (req, res) => {
+router.get("/company/", auth, async (req, res) => {
   const match = {};
   const sort = {};
 
@@ -47,9 +72,37 @@ router.get("/company", auth, async (req, res) => {
         }
       })
       .execPopulate();
-    res.send(req.user.company);
+
+    const out = [];
+    req.user.company.forEach(c => {
+      c = c.toObject();
+      delete c.imageLink;
+
+      out.push({
+        ...c,
+        image: "http://localhost:3000/company/image/" + c._id
+      });
+    });
+
+    console.log(out);
+    res.send(out);
   } catch (e) {
     res.status(500).send();
+  }
+});
+
+router.get("/company/image/:id", async (req, res) => {
+  try {
+    const company = await Company.findById(req.params.id);
+
+    if (!company || !company.imageLink) {
+      throw new Error("Company cant be found");
+    }
+
+    res.set("Content-Type", "image/png");
+    res.send(company.imageLink);
+  } catch (e) {
+    res.status(404).send(e);
   }
 });
 
@@ -71,7 +124,7 @@ router.get("/company/:id", auth, async (req, res) => {
 });
 
 //update company
-router.patch("/company/:id", auth, async (req, res) => {
+router.put("/company/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "name",
@@ -80,8 +133,13 @@ router.patch("/company/:id", auth, async (req, res) => {
     "imageLink",
     "description",
     "personInCharge",
-    "phoneNumber"
+    "phoneNumber",
+    "_id",
+    "userId",
+    "createdAt",
+    "updateAt"
   ];
+
   const isValidOperation = updates.every(update =>
     allowedUpdates.includes(update)
   );

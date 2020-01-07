@@ -56,6 +56,29 @@ router.get("/company/:id/projects/", auth, async (req, res) => {
   }
 });
 
+router.get("/projects/:id", auth, async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const project = await Project.findOne({ _id });
+    if (!project) {
+      return res.status(400).send();
+    }
+    var arr_team = []; //bikin array untuk nampung, baru di push ke var assign yang asli
+
+    for (var p of project.team) {
+      var team = await User.findOne({ _id: p });
+      console.log(team);
+      arr_team.push(team);
+    }
+
+    project.team = arr_team; //lsg ganti pake key yang harus dibuat baru
+
+    res.send(project);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
 //Read all projects
 router.get("/projects", auth, async (req, res) => {
   try {

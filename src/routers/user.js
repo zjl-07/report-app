@@ -32,14 +32,14 @@ router.post("/users/login", async (req, res) => {
 });
 
 //get all user data
-// router.get("/users/all", auth, async (req, res) => {
-//   try {
-//     const users = await User.find({});
-//     res.send(users);
-//   } catch (e) {
-//     res.status(500).send();
-//   }
-// });
+router.get("/users/all", auth, async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.send(users);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
 
 //get data just me
 router.get("/users/me", auth, async (req, res) => {

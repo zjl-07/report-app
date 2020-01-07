@@ -6,10 +6,6 @@ const childSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    id: {
-      //untuk nyimpen id di description
-      type: mongoose.Schema.Types.ObjectId
-    },
     location: {
       type: String
     },
@@ -17,6 +13,9 @@ const childSchema = new mongoose.Schema(
       type: Boolean,
       default: false
       //status active atau inactive
+    },
+    description: {
+      type: String
     },
     isvuln: {
       type: Boolean,
@@ -33,12 +32,10 @@ const childSchema = new mongoose.Schema(
       require: true,
       ref: "Vuln"
     },
-    desc: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Description"
-      }
-    ]
+    desc: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Description"
+    }
   },
   { timestamps: true }
 );
