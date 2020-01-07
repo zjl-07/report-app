@@ -141,7 +141,7 @@ router.get("/vulns/:id/childs", auth, async (req, res) => {
 });
 
 //update childs
-router.patch("/childs/:id", auth, upload.single("poc"), async (req, res) => {
+router.put("/childs/:id", auth, upload.single("poc"), async (req, res) => {
   const buffer = await sharp(req.file.buffer)
     .png()
     .toBuffer();

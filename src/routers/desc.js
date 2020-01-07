@@ -30,7 +30,7 @@ router.get("/descs", auth, async (req, res) => {
 });
 
 //update vulns
-router.patch("/descs/:id", auth, async (req, res) => {
+router.put("/descs/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "description", "cwe"];
 

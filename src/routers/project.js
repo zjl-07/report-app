@@ -93,7 +93,7 @@ router.get("/projects", auth, async (req, res) => {
 });
 
 //Update Projects
-router.patch("/projects/:id", auth, async (req, res) => {
+router.put("/projects/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "name",

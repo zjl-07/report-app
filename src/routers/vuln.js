@@ -156,7 +156,7 @@ router.get("/vulns", auth, async (req, res) => {
 });
 
 //update vulns
-router.patch("/vulns/:id", auth, async (req, res) => {
+router.put("/vulns/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = [
     "name",

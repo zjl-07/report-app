@@ -86,7 +86,7 @@ router.get("/users/:id", async (req, res) => {
 
 //gak pake id karna bisa hijack
 //router.patch("/users/:id")
-router.patch("/users/me", auth, async (req, res) => {
+router.put("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "email", "password", "age"];
   const isValidOperation = updates.every(update =>
