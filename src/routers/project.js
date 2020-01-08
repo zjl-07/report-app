@@ -103,7 +103,12 @@ router.put("/projects/:id", auth, async (req, res) => {
     "reportStartDate",
     "reportEndDate",
     "team",
-    "target"
+    "target",
+    "corporateId",
+    "__id",
+    "createdAt",
+    "updateAt",
+    "__v"
   ];
   const isValidOperation = updates.every(update =>
     allowedUpdates.includes(update)

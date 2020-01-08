@@ -34,7 +34,7 @@ router.post(
         .toBuffer();
     } catch (e) {}
 
-    console.log("a", buffer);
+    // console.log("a", buffer);
 
     const vuln = new Vuln({
       ...req.body,
