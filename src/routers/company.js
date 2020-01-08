@@ -137,7 +137,8 @@ router.put("/company/:id", auth, async (req, res) => {
     "_id",
     "userId",
     "createdAt",
-    "updateAt"
+    "updatedAt",
+    "__v"
   ];
 
   const isValidOperation = updates.every(update =>
