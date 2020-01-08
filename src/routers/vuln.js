@@ -155,6 +155,20 @@ router.get("/vulns", auth, async (req, res) => {
   }
 });
 
+//read vulns by id
+router.get("/vulns/:id", auth, async (req, res) => {
+  const _id = req.params.id;
+  try {
+    const vuln = await Vuln.findOne({ _id });
+    if (!vuln) {
+      return res.status(400).send();
+    }
+    res.send(vuln);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
+
 //update vulns
 router.put("/vulns/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
@@ -166,7 +180,14 @@ router.put("/vulns/:id", auth, async (req, res) => {
     "poc",
     "description",
     "pocverif",
-    "desc"
+    "desc",
+    "_id",
+    "child",
+    "projectId",
+    "createdAt",
+    "updatedAt",
+    "userId",
+    "__v"
   ];
 
   const isValidOperation = updates.every(update =>
